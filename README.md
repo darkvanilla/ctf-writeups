@@ -11,7 +11,7 @@ Below is a curated list of useful tools for various CTF challenge types.
 - Disassembly and decompiling:
 [IDA Pro Disassembler & Decompiler (commercial)](https://www.hex-rays.com/products/ida/)
 
-- Debugging:
+- Debugging (extension for GDB):
 [pwndbg](https://github.com/pwndbg/pwndbg)
 
 ## Pwning (Binary Exploitation)
