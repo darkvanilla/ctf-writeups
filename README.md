@@ -23,3 +23,6 @@ Below is a curated list of useful tools for various CTF challenge types.
 
 - RSA Attacks:
 [RsaCtfTool](https://github.com/Ganapati/RsaCtfTool)
+
+- XOR Attacks:
+[xortool](https://github.com/hellman/xortool)
