@@ -22,6 +22,9 @@ Below is a curated list of useful tools for various CTF challenge types.
 - Pwntools (for Python):
 [pwntools](https://docs.pwntools.com/en/stable/)
 
+- Finding ROP gadgets:
+[ROPGadget](https://github.com/JonathanSalwan/ROPgadget)
+
 ## Cryptography
 
 - RSA Attacks:
