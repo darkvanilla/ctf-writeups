@@ -14,6 +14,9 @@ Below is a curated list of useful tools for various CTF challenge types.
 - Debugging (extension for GDB):
 [pwndbg](https://github.com/pwndbg/pwndbg)
 
+- Static analysis:
+[angr](https://github.com/angr/angr)
+
 ## Pwning (Binary Exploitation)
 
 - Pwntools (for Python):
@@ -26,3 +29,8 @@ Below is a curated list of useful tools for various CTF challenge types.
 
 - XOR Attacks:
 [xortool](https://github.com/hellman/xortool)
+
+## Forensics
+
+- Windows Memory Forensics:
+[Volatility](https://github.com/volatilityfoundation/volatility)
